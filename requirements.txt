@@ -13,3 +13,5 @@ sentence-transformers>=2.2.2
 chromadb>=0.3.30
 typing-extensions>=4.7.1
 pandas>=2.1.0
+tesseract-ocr
+poppler-utils
