@@ -7,7 +7,6 @@ langgraph
 pdf2image
 pytesseract
 sentence-transformers
-chromadb
 Pillow
-typing-extension
+# typing-extension
 pypdf
