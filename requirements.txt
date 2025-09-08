@@ -10,3 +10,4 @@ sentence-transformers
 Pillow
 # typing-extension
 pypdf
+faiss-cpu
