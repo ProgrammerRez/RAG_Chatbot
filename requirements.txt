@@ -9,4 +9,5 @@ pytesseract
 sentence-transformers
 chromadb
 Pillow
-typing-extensions
+typing-extension
+pypdf
