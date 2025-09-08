@@ -10,7 +10,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_chroma import Chroma
+from langchain.vectorstores import FAISS
 from langgraph.graph import START, StateGraph
 from typing_extensions import List, TypedDict
 from langchain.memory import ConversationBufferMemory
@@ -117,14 +117,21 @@ def get_embeddings():
         model_kwargs={"device": "cpu"}
     )
 
-def get_vectorstore(embeddings):
-    """Initialize an in-memory Chroma vector store."""
-    return Chroma(
-        collection_name="example_collection",
-        embedding_function=embeddings,
-        persist_directory=None
-    )
+def get_vectorstore(embeddings, documents):
+    """
+    Initialize an in-memory FAISS vector store from documents.
 
+    Args:
+        embeddings: The embedding model to convert documents into vectors.
+        documents: A list of Document objects to add immediately. Must not be empty.
+
+    Returns:
+        FAISS: An in-memory FAISS vector store.
+    """
+    if not documents:
+        raise ValueError("FAISS vector store requires at least one document to initialize.")
+    
+    return FAISS.from_documents(documents=documents, embedding=embeddings)
 
 # =====================================================
 # RAG Graph Functions
@@ -211,8 +218,8 @@ if st.button("⚡ Process Files") and uploaded_files:
 
         # Vector store + splits
         embeddings = get_embeddings()
-        vectorstore = get_vectorstore(embeddings)
         splits = text_splits(uploaded_files)
+        vectorstore = get_vectorstore(embeddings,documents=splits)
         vectorstore.add_documents(splits)
 
         # Build RAG graph
